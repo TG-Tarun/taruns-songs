@@ -12,6 +12,7 @@ jobs:
     env:
       MORNYE_DISCORD_SDK: "0"
       MORNYE_RUST_ANDROID_ABIS: "arm64-v8a"
+      CARGO_PROFILE_RELEASE_DEBUG: "0"
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -37,6 +38,22 @@ jobs:
             "ndk;30.0.16248370" \
             "cmake;4.1.2"
           echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/30.0.16248370" >> "$GITHUB_ENV"
+
+          
+      - name: Free disk space
+        run: |
+          echo "Disk space before cleanup:"
+          df -h /
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf /usr/local/lib/android/sdk/system-images
+          sudo rm -rf /usr/local/lib/android/sdk/emulator
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+          echo "Disk space after cleanup:"
+          df -h /
+
 
       - name: Setup Flutter pinned by project
         uses: subosito/flutter-action@v2
